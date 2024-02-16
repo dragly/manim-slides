@@ -1,13 +1,13 @@
 from pathlib import Path
 from typing import Any, List, Optional, Tuple
 
-from manim import Scene, ThreeDScene, config
+from manim import MovingCameraScene, ThreeDScene, config
 
 from ..config import BaseSlideConfig
 from .base import BaseSlide
 
 
-class Slide(BaseSlide, Scene):  # type: ignore[misc]
+class Slide(BaseSlide, MovingCameraScene):  # type: ignore[misc]
     """
     Inherits from :class:`Scene<manim.scene.scene.Scene>` and provide necessary tools
     for slides rendering.
@@ -38,11 +38,7 @@ class Slide(BaseSlide, Scene):  # type: ignore[misc]
         # When rendering with -na,b (manim only)
         # the animations not in [a,b] will be skipped,
         # but animation before a will have a None source file.
-        return [
-            Path(file)
-            for file in self.renderer.file_writer.partial_movie_files
-            if file is not None
-        ]
+        return [Path(file) for file in self.renderer.file_writer.partial_movie_files if file is not None]
 
     @property
     def _show_progress_bar(self) -> bool:
@@ -78,7 +74,7 @@ class Slide(BaseSlide, Scene):  # type: ignore[misc]
         base_slide_config: BaseSlideConfig,
         **kwargs: Any,
     ) -> None:
-        Scene.next_section(self, *args, **kwargs)
+        MovingCameraScene.next_section(self, *args, **kwargs)
         BaseSlide.next_slide.__wrapped__(
             self,
             base_slide_config=base_slide_config,
